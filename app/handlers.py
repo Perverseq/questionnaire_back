@@ -1,12 +1,9 @@
-
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from fastapi.templating import Jinja2Templates
 
 from app.database import user_with_login
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates/")
 
 
 # Проверка соответствия логина и пароля бд
