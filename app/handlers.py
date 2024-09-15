@@ -2,23 +2,23 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.database import user_with_login
+from app.models import User
 
 router = APIRouter()
 
 
 # Проверка соответствия логина и пароля бд
-@router.post('user/login')
-def login(email, password) -> JSONResponse:
+@router.post('/user/login')
+def login(u: User) -> JSONResponse:
     """
     Метод для авторизации пользователя.
 
-    :param email: почта зарегистрированного пользователя
-    :param password: пароль от учетной записи пользователя
-    :return: вся информация по пользователю
+    :param u: email и password с помощью модели.
+    :return: ID пользователя и ФИО.
     """
-    user = user_with_login(email, password)
+    user = user_with_login(u.email, u.password)
 
-    if user:
+    if user is not None:
         result = {
             "id": user[0],
             "full_name": user[1]
@@ -28,7 +28,7 @@ def login(email, password) -> JSONResponse:
         return JSONResponse(content={"result": "fail", "error": "Email/password invalid"})
 
 
-@router.get('list/questionnaires')
+@router.get('/list/questionnaires')
 def get_questionnaires(user_id: int, type: bool = None, max: int = 20) -> JSONResponse:
     """
     Метод для получения списка анкет с процентом завершенности
@@ -56,7 +56,7 @@ def get_questionnaires(user_id: int, type: bool = None, max: int = 20) -> JSONRe
         return JSONResponse
 
 
-@router.get('questionnaire/details')
+@router.get('/questionnaire/details')
 def get_questionnaire_details(questionnaire_id: int, user_id: int) -> JSONResponse:
     """
     Метод для получения анкеты для ответа. Список респондентов и вопросы.
@@ -70,7 +70,7 @@ def get_questionnaire_details(questionnaire_id: int, user_id: int) -> JSONRespon
     return JSONResponse
 
 
-@router.get('questionnaire/results')
+@router.get('/questionnaire/results')
 def get_questionnaire_results(questionnaire_id: int, user_id: int) -> JSONResponse:
     """
     Метод для получения результатов по анкете.
