@@ -97,4 +97,4 @@ def post_questionnaire_save_answer(questionnaire_id: int, user_id: int, responde
     :return: Статус успешно или нет.
     """
     pass
-    return ''
+    return 'test'
